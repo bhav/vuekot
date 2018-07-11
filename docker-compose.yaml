@@ -1,0 +1,22 @@
+version: '3'
+services:
+  vuekot-api-server:
+    build:
+      context: api-server/
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./api-server:/app
+      - /app/.gradle
+      - gradle-cache:/root/.gradle/caches/modules-2/files-2.1/
+    restart: always
+  vuekot-front:
+    build:
+      context: front/
+    command: bash -c "yarn install && yarn run dev"
+    ports:
+      - "80:80"
+    volumes:
+      - ./front:/app
+volumes:
+  gradle-cache:  
