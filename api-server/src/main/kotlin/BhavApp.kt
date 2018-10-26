@@ -1,16 +1,9 @@
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import main.kotlin.vuekot.routes.event.EventRoutes
 
 fun main(args: Array<String>) {
-    embeddedServer(Netty, 8080) {
-        routing {
-            get("/") {
-                call.respondText("My Example Blog", ContentType.Text.Html)
-            }
-        }
+    embeddedServer(Netty, 8080){
+        EventRoutes(this)
     }.start(wait = true)
 }
