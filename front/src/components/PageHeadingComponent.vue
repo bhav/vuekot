@@ -7,7 +7,7 @@
         name:"PageHeadingComponent",
         data (){
             return {
-                title:"ACME's Staff List"
+                title:"Event List"
             }
         }
     }

@@ -56,7 +56,7 @@ export default {
 
   methods: {
     handleSubmit(event) {
-        axios.post(`http://jsonplaceholder.typicode.com/posts`, {body: this.postBody})
+        axios.post(`http://localhost:8080/api/event`, {event_name: this.event.name, event_contact_email: this.event.email, event_type: this.event.eventType})
         .then(response => {})
         .catch(e => {this.errors.push(e)})
       

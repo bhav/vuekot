@@ -14,8 +14,7 @@ interface EventService {
 
 class VueKotEventService() : EventService {
 
-    val events = arrayListOf<Event>(Event("tester", "tester@gfd.com", "A"),
-                                                   Event("nester", "nester@gfd.com", "B"))
+    val events = arrayListOf<Event>()
 
     override suspend fun createEvent(eventName: String, eventType: String, emailAddress: String): Event {
         val event = Event(eventName, emailAddress, eventType)
