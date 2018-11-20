@@ -5,7 +5,7 @@ import main.kotlin.vuekot.model.event.Event
 
 interface EventService {
 
-    suspend fun createEvent(eventName: String, eventType: String, emailAddress: String) : Event
+    suspend fun createEvent(eventName: String, eventType: String, emailAddress: String) : EventResult
 
     suspend fun getAllEvents() : List<Event>
 
@@ -13,13 +13,16 @@ interface EventService {
 }
 
 class VueKotEventService() : EventService {
-
+    
     val events = arrayListOf<Event>()
 
-    override suspend fun createEvent(eventName: String, eventType: String, emailAddress: String): Event {
+    override suspend fun createEvent(eventName: String, eventType: String, emailAddress: String): EventResult {
         val event = Event(eventName, emailAddress, eventType)
+        if (events.map { event -> event.name }.contains(eventName)) {
+            return EventResult.FailResult
+        }
         events.add(event)
-        return event
+        return EventResult.SuccessfulResult(event)
     }
 
     override suspend fun getAllEvents(): List<Event> {
@@ -30,3 +33,10 @@ class VueKotEventService() : EventService {
         return events.filter { e -> e.name.equals(eventName) }.firstOrNull()
     }
 }
+
+sealed class EventResult {
+    data class SuccessfulResult(val event: Event) : EventResult()
+    object FailResult : EventResult()
+
+}
+

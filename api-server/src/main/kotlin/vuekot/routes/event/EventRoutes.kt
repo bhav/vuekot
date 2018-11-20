@@ -13,6 +13,7 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 import main.kotlin.vuekot.model.event.Event
 import main.kotlin.vuekot.routes.BaseRoute
+import main.kotlin.vuekot.service.event.EventResult
 import main.kotlin.vuekot.service.event.EventService
 import main.kotlin.vuekot.service.event.VueKotEventService
 
@@ -54,8 +55,13 @@ class EventRoutes constructor(application: Application) : BaseRoute() {
                         val eventType = json["event_type"].nullString
 
                         if (allDefined(eventName, eventContactEmail, eventType)) {
-                            val createdEvent = eventService.createEvent(eventName!!, eventType!!, eventContactEmail!!)
-                            call.respondWithJsonId(createdEvent.name, HttpStatusCode.Created)
+                            val eventResult = eventService.createEvent(eventName!!, eventType!!, eventContactEmail!!)
+                            when(eventResult) {
+                                is EventResult.SuccessfulResult -> call.respondWithJsonId(eventResult.event.name, HttpStatusCode.Created)
+                                is EventResult.FailResult -> call.respond(HttpStatusCode.BadRequest)
+                            }
+
+
                         } else {
                             call.respond(HttpStatusCode.BadRequest)
                         }

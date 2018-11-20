@@ -2,6 +2,14 @@
   <!-- @submit handles any form of submission. -->
   <!-- .prevent keeps the event from bubbling around and doing anything else. -->
   <div>
+    <h3>{{message}}</h3>
+    
+     <ul v-if="errors && errors.length">
+        <li v-for="error of errors">
+            <p><strong>{{error.response.statusText}}</strong></p>
+        </li>
+      </ul>
+
   <form @submit.prevent="handleSubmit">
     <label>
       Event Name:
@@ -29,6 +37,7 @@
   
   
   <h3> Setting up Event with Name: {{event.name}} </h3>
+
   
   </div>
    
@@ -45,9 +54,10 @@ export default {
         name: '',
         email: '',
         eventType: '',
-        eventDate: '',
-        errors: []
-      }
+        eventDate: ''
+      },
+      message: '',
+      errors: []
     }
   },
   
@@ -57,10 +67,21 @@ export default {
   methods: {
     handleSubmit(event) {
         axios.post(`http://localhost:8080/api/event`, {event_name: this.event.name, event_contact_email: this.event.email, event_type: this.event.eventType})
-        .then(response => {})
-        .catch(e => {this.errors.push(e)})
+        .then(response => {
+          if (response.status == 201) {
+            this.message = 'Event ' + this.event.name + ' successfully created' 
+          } else {
+            this.message = 'Sorry Could not create event. Something went wrong'  
+          }
+          
+        })
+        .catch(e => {
+           this.errors.push(e);
+           this.message = 'Sorry Could not create event'
+        
+        })
       
-        console.log("Event Name is" + this.event.name, this.event.eventDate)
+        
     }
   }
 }
