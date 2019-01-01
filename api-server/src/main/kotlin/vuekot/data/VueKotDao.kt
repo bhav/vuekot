@@ -15,10 +15,21 @@ interface VueKotDao {
     suspend fun getAllEvents(): List<Event>
 }
 
-object ExposedVueKotDao: VueKotDao {
+class ExposedVueKotDao private constructor(context: DbContext): VueKotDao {
 
-    private val db = Database.connect("jdbc:postgresql://postgres-db:5432/vuekot_events", driver = "org.postgresql.Driver",
-                        user = "postgres", password = "postgres")
+    companion object SingletonFactory {
+        private var DAOINSTANCE : ExposedVueKotDao? = null
+        fun getInstance(context: DbContext): ExposedVueKotDao  {
+
+            return DAOINSTANCE ?: synchronized(this) {
+                DAOINSTANCE ?: ExposedVueKotDao(context)
+            }
+
+        }
+    }
+
+    private val db = Database.connect("jdbc:postgresql://${context.host}:${context.port}/vuekot_events", driver = "org.postgresql.Driver",
+                        user = context.username, password = context.password)
 
     override suspend fun createEvent(event: Event) {
         transaction {
@@ -49,3 +60,5 @@ object Events: Table() {
     val eventContactEmail = varchar("event_contact_email", length = 255)
 
 }
+
+data class DbContext (val host:String, val port:String, val username:String, val password:String)

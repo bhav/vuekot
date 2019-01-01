@@ -12,6 +12,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
+import main.kotlin.vuekot.data.DbContext
 import main.kotlin.vuekot.model.event.Event
 import main.kotlin.vuekot.routes.BaseRoute
 import main.kotlin.vuekot.service.event.EventResult
@@ -23,7 +24,12 @@ import main.kotlin.vuekot.service.event.VueKotEventService
  */
 class EventRoutes constructor(application: Application) : BaseRoute() {
 
-    val eventService:EventService = VueKotEventService()
+    val dbContext:DbContext = DbContext(application.environment.config.property("vuekot.db.connection.db_host").getString(),
+                    application.environment.config.property("vuekot.db.connection.db_port").getString(),
+                    application.environment.config.property("vuekot.db.connection.db_username").getString(),
+                    application.environment.config.property("vuekot.db.connection.db_password").getString())
+
+    val eventService:EventService = VueKotEventService(dbContext)
 
     init {
         application.routing {

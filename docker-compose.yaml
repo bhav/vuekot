@@ -5,6 +5,11 @@ services:
       context: api-server/
     ports:
       - "8080:8080"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=postgres-db
+      - POSTGRES_PORT=5432
     volumes:
       - ./api-server:/app
       - /app/.gradle

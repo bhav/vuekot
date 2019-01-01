@@ -33,7 +33,7 @@ task runDebug(type: JavaExec) {
 
 sourceSets {
     main.kotlin.srcDirs = [ 'src' ]
-    main.resources.srcDirs = [ 'resources' ]
+    main.resources.srcDirs = [ 'src/main/resources' ]
 }
 
 sourceCompatibility = 1.8
