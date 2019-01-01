@@ -1,5 +1,6 @@
 package main.kotlin.vuekot.service.event
 
+import main.kotlin.vuekot.data.ExposedVueKotDao
 import main.kotlin.vuekot.model.event.Event
 
 
@@ -13,24 +14,26 @@ interface EventService {
 }
 
 class VueKotEventService() : EventService {
-    
-    val events = arrayListOf<Event>()
+
+
+    val vueKotDao = ExposedVueKotDao
 
     override suspend fun createEvent(eventName: String, eventType: String, emailAddress: String): EventResult {
         val event = Event(eventName, emailAddress, eventType)
-        if (events.map { event -> event.name }.contains(eventName)) {
+        if (vueKotDao.getAllEvents().map { event -> event.name }.contains(eventName)) {
             return EventResult.FailResult
         }
-        events.add(event)
+        //events.add(event)
+        vueKotDao.createEvent(event)
         return EventResult.SuccessfulResult(event)
     }
 
     override suspend fun getAllEvents(): List<Event> {
-        return events
+        return vueKotDao.getAllEvents()
     }
 
     override suspend fun getEventByName(eventName: String): Event? {
-        return events.filter { e -> e.name.equals(eventName) }.firstOrNull()
+        return vueKotDao.getAllEvents().filter { e -> e.name.equals(eventName) }.firstOrNull()
     }
 }
 

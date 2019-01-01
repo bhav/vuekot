@@ -5,6 +5,7 @@ import com.github.salomonbrys.kotson.nullString
 import com.google.gson.JsonObject
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.features.origin
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.routing.get
@@ -44,6 +45,10 @@ class EventRoutes constructor(application: Application) : BaseRoute() {
                     }
 
                     get {
+                        println("Recieved Request! Yay!!")
+                        println(this.context.request.origin.host)
+                        println(this.context.request.origin.remoteHost)
+                        println(this.context.request.origin.uri)
                         val events = eventService.getAllEvents()
                         call.respondWithJsonResults(events, HttpStatusCode.OK){eventToJsonObject(it)}
                     }

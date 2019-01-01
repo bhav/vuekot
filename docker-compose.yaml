@@ -10,13 +10,33 @@ services:
       - /app/.gradle
       - gradle-cache:/root/.gradle/caches/modules-2/files-2.1/
     restart: always
-  vuekot-front:
+    depends_on:
+      - postgres-db
+    networks:
+      - vuekot
+      - database  
+  # vuekot-front:
+  #   build:
+  #     context: front/
+  #   command: bash -c "yarn install && yarn run dev"
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./front:/app
+  postgres-db:
     build:
-      context: front/
-    command: bash -c "yarn install && yarn run dev"
+      context: ./db
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
-    volumes:
-      - ./front:/app
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - vuekot
+      - database  
+networks:
+  vuekot:
+  database:      
 volumes:
   gradle-cache:  

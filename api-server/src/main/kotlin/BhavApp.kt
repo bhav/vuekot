@@ -11,8 +11,11 @@ fun main(args: Array<String>) {
         EventRoutes(this)
 
         install(CORS) {
-            host("localhost:80")
+            //docker would be localhost
+            //host("vuekot-frontend-app:80")
+            anyHost()
             header(HttpHeaders.Authorization)
+
         }
 
     }.start(wait = true)
